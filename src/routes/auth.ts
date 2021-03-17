@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express"
 import User from "../entities/User"
 import { validate, isEmpty } from "class-validator"
 import bcrypt from "bcrypt"
-import jwt, { JsonWebTokenError } from "jsonwebtoken"
+import jwt from "jsonwebtoken"
 import cookie from "cookie"
 import auth from "../middleware/auth"
 
@@ -60,7 +60,7 @@ const login = async (req: Request, res: Response) => {
       return res.status(401).json({ password: "Password is incorrect" })
     }
 
-    const token = jwt.sign({ username }, process.env.JWT_SECRET)
+    const token = jwt.sign({ username }, process.env.JWT_SECRET!)
 
     res.set(
       "set-Cookie",
@@ -74,7 +74,10 @@ const login = async (req: Request, res: Response) => {
     )
 
     return res.json(user)
-  } catch (err) {}
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({ error: "Something went wrong" })
+  }
 }
 
 const me = async (_: Request, res: Response) => {
