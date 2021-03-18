@@ -1,7 +1,38 @@
+import { FormEvent, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
+import axios from "axios";
+import { useRouter } from "next/router";
+
+import InputGroup from "../components/InputGroup";
 
 export default function Register() {
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [agreement, setAgreement] = useState(false);
+  const [errors, setErrors] = useState<any>({});
+
+  const router = useRouter();
+
+  const submitForm = async (event: FormEvent) => {
+    event.preventDefault();
+    if (!agreement) {
+      setErrors({ ...errors, agreement: "You have to agree to T&Cs" });
+      return;
+    }
+    try {
+      await axios.post("/auth/register", {
+        email,
+        password,
+        username,
+      });
+
+      router.push("/login");
+    } catch (err) {
+      setErrors(err.response.data);
+    }
+  };
   return (
     <div className="flex">
       <Head>
@@ -10,7 +41,7 @@ export default function Register() {
       </Head>
 
       <div
-        className="w-40 h-screen bg-center bg-cover"
+        className="h-screen bg-center bg-cover w-36"
         style={{ backgroundImage: "url('/images/bricks.jpg')" }}
       ></div>
       <div className="flex flex-col justify-center pl-6">
@@ -19,38 +50,46 @@ export default function Register() {
           <p className="mb-10 text-xs">
             By continuing, you agree to our User Agreement and Privacy Policy.
           </p>
-          <form>
+          <form onSubmit={submitForm}>
             <div className="mb-6">
               <input
                 type="checkbox"
                 className="mr-1 cursor-pointer"
                 id="agreement"
+                checked={agreement}
+                onChange={(e) => setAgreement(e.target.checked)}
               />
               <label htmlFor="agreement" className="text-xs cursor-pointer">
                 I agree to get emails about cool stuff on readit
               </label>
+              <small className="block font-medium text-red-600">
+                {errors.agreement}
+              </small>
             </div>
-            <div className="mb-2">
-              <input
-                className="w-full p-3 py-2 bg-gray-100 border border-gray-400 rounded"
-                placeholder="Email"
-                type="email"
-              />
-            </div>
-            <div className="mb-2">
-              <input
-                className="w-full p-3 py-2 bg-gray-100 border border-gray-400 rounded"
-                placeholder="Username"
-                type="text"
-              />
-            </div>
-            <div className="mb-2">
-              <input
-                className="w-full p-3 py-2 bg-gray-100 border border-gray-400 rounded"
-                placeholder="Password"
-                type="password"
-              />
-            </div>
+            <InputGroup
+              type="email"
+              placeholder="Email"
+              value={email}
+              setValue={setEmail}
+              className="mb-2"
+              error={errors.email}
+            />
+            <InputGroup
+              type="username"
+              placeholder="username"
+              value={username}
+              setValue={setUsername}
+              className="mb-2"
+              error={errors.username}
+            />
+            <InputGroup
+              type="password"
+              placeholder="password"
+              value={password}
+              setValue={setPassword}
+              className="mb-4"
+              error={errors.password}
+            />
             <button className="w-full py-2 mb-4 text-xs font-bold text-white uppercase bg-blue-500 border border-blue-500 rounded">
               Sign up
             </button>
