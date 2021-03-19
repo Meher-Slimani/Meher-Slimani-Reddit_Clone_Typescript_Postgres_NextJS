@@ -4,6 +4,7 @@ import { Post } from "../types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import axios from "axios";
+import classNames from 'classnames'
 
 dayjs.extend(relativeTime);
 
@@ -55,7 +56,9 @@ const PostCard = ({
           className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-red-500"
           onClick={() => vote(1)}
         >
-          <i className="icon-arrow-up"></i>
+          <i className={classNames("icon-arrow-up", {
+            'text-red-500': userVote === 1
+          })}></i>
         </div>
         <p className="text-xs font-bold">{voteScore}</p>
         {/* Downvote */}
@@ -63,7 +66,9 @@ const PostCard = ({
           className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-blue-600"
           onClick={() => vote(-1)}
         >
-          <i className="icon-arrow-down"></i>
+          <i className={classNames("icon-arrow-down", {
+            'text-blue-600': userVote === -1
+          })}></i>
         </div>
       </div>
       {/* Post data section */}
