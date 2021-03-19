@@ -15,7 +15,7 @@ export default function Home() {
   const { data: posts } = useSWR("/posts");
 
   return (
-    <div className="pt-12">
+    <>
       <Head>
         <title>Readit: the front page of the internet</title>
       </Head>
@@ -28,7 +28,7 @@ export default function Home() {
         </div>
         {/* Sidebar */}
       </div>
-    </div>
+    </>
   );
 }
 
