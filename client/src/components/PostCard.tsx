@@ -3,18 +3,11 @@ import Link from "next/link";
 import { Post } from "../types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import axios from "axios";
 import classNames from "classnames";
+import axios from "axios";
+import ActionButton from "./ActionButton";
 
 dayjs.extend(relativeTime);
-
-const ActionButton = ({ children }) => {
-  return (
-    <div className="px-1 py-1 mr-1 text-xs text-gray-400 rounded cursor-pointer hover:bg-gray-200">
-      {children}
-    </div>
-  );
-};
 
 interface PostCardProps {
   post: Post;
@@ -35,7 +28,7 @@ const PostCard = ({
     username,
   },
 }: PostCardProps) => {
-  const vote = async (value) => {
+  const vote = async (value: number) => {
     try {
       const res = await axios.post("/misc/vote", {
         identifier,
@@ -111,7 +104,7 @@ const PostCard = ({
             <a>
               <ActionButton>
                 <i className="mr-1 fas fa-comment-alt fa-xs"></i>
-                <span className="font-bold">{commentCount}</span>
+                <span className="font-bold">{commentCount} Comments</span>
               </ActionButton>
             </a>
           </Link>
