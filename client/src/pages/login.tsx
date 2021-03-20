@@ -3,7 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/router";
-import {useAuthDispatch, useAuthState} from '../context/auth'
+import { useAuthDispatch, useAuthState } from "../context/auth";
 
 import InputGroup from "../components/InputGroup";
 
@@ -12,11 +12,11 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<any>({});
 
-  const dispatch = useAuthDispatch() 
-  const {authenticated} = useAuthState()
+  const dispatch = useAuthDispatch();
+  const { authenticated } = useAuthState();
 
   const router = useRouter();
-  if(authenticated) router.push('/')
+  if (authenticated) router.push("/");
 
   const submitForm = async (event: FormEvent) => {
     event.preventDefault();
@@ -27,9 +27,9 @@ export default function Register() {
         username,
       });
 
-      dispatch('LOGIN', res.data)
+      dispatch("LOGIN", res.data);
 
-      router.push("/");
+      router.back();
     } catch (err) {
       setErrors(err.response.data);
     }
