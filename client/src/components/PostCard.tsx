@@ -11,7 +11,7 @@ dayjs.extend(relativeTime);
 
 interface PostCardProps {
   post: Post;
-  revalidate: () => void;
+  revalidate?: () => void;
 }
 
 const PostCard = ({
