@@ -11,7 +11,7 @@ import Link from "next/link";
 dayjs.extend(relativeTime);
 
 export default function Home() {
-  const { data: posts } = useSWR("/posts");
+  const { data: posts, revalidate } = useSWR("/posts");
 
   const { data: topSubs } = useSWR("/misc/top-subs");
 
@@ -24,7 +24,11 @@ export default function Home() {
         {/* Post feed */}
         <div className="w-160">
           {posts?.map((post) => (
-            <PostCard post={post} key={post.identifier} />
+            <PostCard
+              post={post}
+              revalidate={revalidate}
+              key={post.identifier}
+            />
           ))}
         </div>
         {/* Sidebar */}

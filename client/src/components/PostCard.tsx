@@ -11,6 +11,7 @@ dayjs.extend(relativeTime);
 
 interface PostCardProps {
   post: Post;
+  revalidate: () => void;
 }
 
 const PostCard = ({
@@ -27,15 +28,18 @@ const PostCard = ({
     url,
     username,
   },
+  revalidate,
 }: PostCardProps) => {
   const vote = async (value: number) => {
+    // If vote is the same reset vote
+    if (value === userVote) value = 0;
     try {
       const res = await axios.post("/misc/vote", {
         identifier,
         slug,
         value,
       });
-      console.log(res.data);
+      revalidate();
     } catch (err) {
       console.log(err);
     }
