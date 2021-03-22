@@ -14,10 +14,10 @@ export default function Register() {
   const [agreement, setAgreement] = useState(false);
   const [errors, setErrors] = useState<any>({});
 
-  const {authenticated} = useAuthState()
+  const { authenticated } = useAuthState();
 
   const router = useRouter();
-  if(authenticated) router.push('/')
+  if (authenticated) router.push("/");
 
   const submitForm = async (event: FormEvent) => {
     event.preventDefault();
@@ -93,7 +93,7 @@ export default function Register() {
               className="mb-4"
               error={errors.password}
             />
-            <button className="w-full py-2 mb-4 text-xs font-bold text-white uppercase bg-blue-500 border border-blue-500 rounded">
+            <button className="w-full py-2 mb-4 uppercase blue button">
               Sign up
             </button>
           </form>
