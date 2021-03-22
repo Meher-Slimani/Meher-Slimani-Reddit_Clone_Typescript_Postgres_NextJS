@@ -6,12 +6,14 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import classNames from "classnames";
 import axios from "axios";
 import ActionButton from "./ActionButton";
+import { useAuthState } from "../context/auth";
+import { useRouter } from "next/router";
 
 dayjs.extend(relativeTime);
 
 interface PostCardProps {
   post: Post;
-  revalidate?: () => void;
+  revalidate?: Function;
 }
 
 const PostCard = ({
@@ -30,7 +32,12 @@ const PostCard = ({
   },
   revalidate,
 }: PostCardProps) => {
+  const { authenticated } = useAuthState();
+  const router = useRouter();
+
   const vote = async (value: number) => {
+    if (!authenticated) router.push("/login");
+
     // If vote is the same reset vote
     if (value === userVote) value = 0;
     try {
@@ -39,13 +46,17 @@ const PostCard = ({
         slug,
         value,
       });
-      revalidate();
+      if (revalidate) revalidate();
     } catch (err) {
       console.log(err);
     }
   };
   return (
-    <div key={identifier} className="flex mb-4 bg-white rounded">
+    <div
+      key={identifier}
+      className="flex mb-4 bg-white rounded"
+      id={identifier}
+    >
       {/* Vote section */}
       <div className="w-10 py-3 text-center bg-gray-200 rounded-l">
         {/* UpVote */}
