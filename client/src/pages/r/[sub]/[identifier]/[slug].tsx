@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import axios from "axios";
 import Head from "next/head";
 import Image from "next/image";
@@ -19,6 +19,7 @@ dayjs.extend(relativeTime);
 const PostPage = () => {
   // Local State
   const [newComment, setNewComment] = useState("");
+  const [description, setDescription] = useState("");
   // Global State
   const { authenticated, user } = useAuthState();
 
@@ -35,6 +36,13 @@ const PostPage = () => {
   );
 
   if (error) router.push("/");
+
+  useEffect(() => {
+    if (!post) return;
+    let desc = post.body || post.title;
+    desc = desc.substring(0, 158).concat("..");
+    setDescription(desc);
+  }, [post]);
 
   const vote = async (value: number, comment?: Comment) => {
     // If not logged in go to login
@@ -82,6 +90,11 @@ const PostPage = () => {
     <>
       <Head>
         <title>{post?.title}</title>
+        <meta name="description" content={description}></meta>
+        <meta property="og:description" content={description} />
+        <meta property="og:title" content={post?.title} />
+        <meta property="twitter:description" content={description} />
+        <meta property="twitter:title" content={post?.title} />
       </Head>
       <Link href={`/r/${sub}`}>
         <a>
